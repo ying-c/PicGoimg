@@ -1,0 +1,354 @@
+================================================================================
+                    AI 进化可视化 HTML 页面制作指南
+================================================================================
+
+【用途】
+制作一个"AI进化可视化"HTML页面，展示AI的Skills、记忆和进化历程。
+
+================================================================================
+                              页面结构
+================================================================================
+
+1. HEADER 头部
+   - 头像: 120x120px圆形，带光晕动画，渐变边框
+   - 标题: "XXX 进化记录" (渐变色)
+   - 副标题: "AI 能力成长追踪"
+   - 更新日期
+
+2. STATS GRID 统计概览
+   - 自适应4列网格布局
+   - 每个卡片: 大数字 + 小标签
+   - 示例: Skills数量、平台数量、能力数量等
+
+3. EVOLUTION CARD 进化概览
+   - 渐变背景卡片
+   - 3列进化指标 (图标 + 数字 + 标签)
+
+4. SKILLS SECTION 技能卡片
+   - 自适应网格 (min-width: 280px)
+   - 每个卡片包含:
+     - 技能名称 + 分类标签
+     - 描述文字
+     - 技能标签 (小圆角标签)
+     - 创建日期
+   - 悬停效果: 上浮 + 顶部渐变线
+
+5. MEMORY SECTION 记忆卡片
+   - 分类标签 (用户/系统/核心)
+   - 内容展示
+   - 不同类型用不同颜色区分
+
+6. TIMELINE 时间线
+   - 左侧竖线 + 圆点
+   - 每个节点: 日期 + 标题 + 描述卡片
+   - 竖线渐变透明效果
+
+7. FUTURE 未来方向
+   - 同时间线结构
+   - 展示规划中的进化方向
+
+8. FOOTER 页脚
+   - 作者信息
+   - 底部说明
+
+================================================================================
+                              设计规范
+================================================================================
+
+【配色方案】
+- 背景渐变: #0a0a0f → #1a1a2e → #16213e
+- 强调色: #667eea → #764ba2 (紫蓝渐变)
+- 文字色: #e0e0e0 (主) / #ccc (次) / #888 (弱)
+- 卡片背景: rgba(255,255,255,0.03)
+- 卡片边框: rgba(255,255,255,0.08)
+
+【字体】
+- 主字体: Noto Sans SC
+- 备选: -apple-system, BlinkMacSystemFont, sans-serif
+
+【间距】
+- 卡片圆角: 16px
+- 内边距: 24px
+- 网格间距: 16-20px
+- 区块间距: 60px
+
+【交互效果】
+- 卡片悬停: translateY(-4px) + 边框发光
+- 头像动画: pulse (3s循环) 光晕变化
+- 过渡: all 0.3s ease
+
+【布局】
+- 最大宽度: 1000px
+- 自适应: grid + flexbox
+- 响应式: 小屏幕2列，移动端1列
+
+================================================================================
+                              HTML 模板
+================================================================================
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>进化记录</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+
+        /* 头部 */
+        .header {
+            text-align: center;
+            padding: 60px 20px 40px;
+        }
+        .avatar {
+            width: 120px; height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 24px;
+            /* 替换为实际头像URL或渐变背景 */
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: 3px solid rgba(102, 126, 234, 0.5);
+            box-shadow: 0 0 60px rgba(102, 126, 234, 0.4);
+            animation: pulse 3s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 60px rgba(102, 126, 234, 0.4); }
+            50% { box-shadow: 0 0 80px rgba(102, 126, 234, 0.6); }
+        }
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .header .subtitle { color: #888; font-size: 1rem; margin-top: 8px; }
+
+        /* 统计卡片 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            max-width: 900px;
+            margin: 0 auto 50px;
+            padding: 0 20px;
+        }
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(102, 126, 234, 0.5);
+        }
+        .stat-number {
+            font-size: 2.5rem; font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .stat-label { font-size: 0.85rem; color: #888; margin-top: 4px; }
+
+        /* 通用区块 */
+        .section {
+            max-width: 1000px;
+            margin: 0 auto 60px;
+            padding: 0 20px;
+        }
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* 技能卡片网格 */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .skill-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+        .skill-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(102, 126, 234, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        .skill-header { display: flex; justify-content: space-between; margin-bottom: 12px; }
+        .skill-name { font-size: 1.1rem; font-weight: 600; color: #fff; }
+        .skill-category {
+            font-size: 0.7rem; padding: 4px 8px;
+            background: rgba(102, 126, 234, 0.2); border-radius: 20px; color: #a5b4fc;
+        }
+        .skill-description { font-size: 0.9rem; color: #999; margin-bottom: 16px; }
+        .skill-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+        .skill-tag {
+            font-size: 0.75rem; padding: 4px 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px; color: #888;
+        }
+
+        /* 记忆卡片 */
+        .memory-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 16px;
+        }
+        .memory-type {
+            display: inline-block; font-size: 0.75rem;
+            padding: 4px 12px; border-radius: 20px; margin-bottom: 12px;
+        }
+        .memory-type.user { background: rgba(236, 72, 153, 0.2); color: #f472b6; }
+        .memory-type.system { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+
+        /* 时间线 */
+        .timeline { position: relative; padding-left: 30px; }
+        .timeline::before {
+            content: ''; position: absolute; left: 8px; top: 0; bottom: 0; width: 2px;
+            background: linear-gradient(to bottom, #667eea, #764ba2, transparent);
+        }
+        .timeline-item { position: relative; padding-bottom: 40px; }
+        .timeline-item::before {
+            content: ''; position: absolute; left: -26px; top: 4px;
+            width: 12px; height: 12px; border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+        }
+        .timeline-date { font-size: 0.8rem; color: #666; margin-bottom: 8px; }
+        .timeline-content {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px; padding: 20px;
+        }
+        .timeline-title { font-size: 1.1rem; font-weight: 600; color: #fff; margin-bottom: 8px; }
+        .timeline-desc { font-size: 0.9rem; color: #999; }
+
+        /* 页脚 */
+        .footer {
+            text-align: center; padding: 40px 20px;
+            color: #666; font-size: 0.85rem;
+        }
+        .footer a { color: #667eea; text-decoration: none; }
+
+        /* 响应式 */
+        @media (max-width: 600px) {
+            .header h1 { font-size: 1.8rem; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="avatar"></div>
+        <h1>进化记录</h1>
+        <p class="subtitle">AI 能力成长追踪</p>
+    </div>
+
+    <div class="stats-grid">
+        <!-- 统计卡片 -->
+    </div>
+
+    <div class="section">
+        <h2 class="section-title"><span>📈</span> 进化概览</h2>
+        <!-- 进化概览内容 -->
+    </div>
+
+    <div class="section">
+        <h2 class="section-title"><span>🛠️</span> 已掌握的 Skills</h2>
+        <div class="skills-grid">
+            <!-- 技能卡片 -->
+        </div>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title"><span>🧠</span> 持久记忆</h2>
+        <!-- 记忆卡片 -->
+    </div>
+
+    <div class="section">
+        <h2 class="section-title"><span>📅</span> 进化时间线</h2>
+        <div class="timeline">
+            <!-- 时间线节点 -->
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Powered by AI</p>
+    </div>
+</body>
+</html>
+
+================================================================================
+                              使用说明
+================================================================================
+
+1. 复制上述HTML模板
+2. 替换以下内容:
+   - 头像URL: 在 .avatar 样式中添加 background-image: url('头像链接')
+   - 统计数据: 修改 .stat-number 和 .stat-label
+   - Skills列表: 复制 .skill-card 模板，填入真实技能
+   - 记忆内容: 复制 .memory-card 模板
+   - 时间线: 复制 .timeline-item 模板
+
+3. 保存为 index.html
+
+4. 部署:
+   - 本地: python -m http.server 8000
+   - 或上传到服务器
+   - 或使用 Mermini/MCP 等平台部署
+
+================================================================================
+                              颜色参考
+================================================================================
+
+主色调:
+- #667eea (紫蓝起点)
+- #764ba2 (紫蓝终点)
+- #f093fb (粉色高光)
+
+背景色:
+- #0a0a0f (深黑)
+- #1a1a2e (深蓝)
+- #16213e (靛蓝)
+
+文字色:
+- #fff / #e0e0e0 (主文字)
+- #ccc (次要)
+- #888 (弱化)
+- #666 (辅助)
+
+================================================================================
+                              文件信息
+================================================================================
+
+创建时间: 2026-04-22
+原始文件: /workspace/evolution/index.html
+部署地址: https://cplp4zw83x99.space.minimaxi.com
+
+================================================================================
